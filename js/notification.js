@@ -1,6 +1,6 @@
-var BOSH_SERVICE = 'talk.google.com:5222'
-var SERVICE_USER = 'pycon.bot@gmail.com' 
-var SERVICE_PWD = 'pycon123'
+var BOSH_SERVICE = 'http://mymac.local:7070/http-bind'
+var SERVICE_USER = 'admin' 
+var SERVICE_PWD = '123456'
 var connection = null;
 
 function rawInput(data) {
@@ -12,7 +12,20 @@ function rawOutput(data) {
 }
 
 function onConnect(status) {
-   log(status);
+   if (status == Strophe.Status.CONNECTING) {
+      log('Strophe is connecting.');
+   } else if (status == Strophe.Status.CONNFAIL) {
+	log('Strophe failed to connect.');
+	  $('#connect').get(0).value = 'connect';
+   } else if (status == Strophe.Status.DISCONNECTING) {
+	  log('Strophe is disconnecting.');
+   } else if (status == Strophe.Status.DISCONNECTED) {
+	  log('Strophe is disconnected.');
+	  $('#connect').get(0).value = 'connect';
+   } else if (status == Strophe.Status.CONNECTED) {
+	  log('Strophe is connected.');
+   	  connection.disconnect();
+   }
 }
 
 function log(data) {
