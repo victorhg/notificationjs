@@ -1,8 +1,40 @@
 #log {
 
    width: 100%;
-   height: 400px;
+   height: 200px;
+   text-size: 10px;
    overflow: auto;
    border: 1px solid #eee;
+}
+
+#chat {
+  height: 400px;
+  width: 600px;
+  border: 1px solid #ccc; 
+}
+
+#chat div {
+   display: inline-block;
+}
+
+#chat #users {
+   width: 200px;
+   border: 1px solid #eee;
+   height: 350px;
+   overflow: auto;
+}
+
+#chat form {
+   text-align: center;
+}
+
+#chat form textarea {
+   width: 480px;
+   margin: 0px auto 0px auto;
+}
+#chat #history {
+   width: 380px;
+   overflow: auto;
+   height: 350px;
 }
 

@@ -1,15 +1,6 @@
 var BOSH_SERVICE = '/http-bind/'
-var SERVICE_USER = 'victorhg' 
-var SERVICE_PWD = '123456'
 var connection = null;
-
-function rawInput(data) {
-   log('RECV:' + data);
-}
-
-function rawOutput(data) {
-   log('SENT:' + data);
-}
+var from_user = null;
 
 function onConnect(status) {
    if (status == Strophe.Status.CONNECTING) {
@@ -24,7 +15,7 @@ function onConnect(status) {
 	  $('#connect').get(0).value = 'connect';
    } else if (status == Strophe.Status.CONNECTED) {
 	  log('#### STROPHE CONNECTED ###');
-      connection.addHandler(onMessage, null, 'message', null, null, null);
+      connection.addHandler(onMessage, null, 'message', 'chat', null, null);
       connection.send($pres().tree());
    }
 }
@@ -34,26 +25,16 @@ function onPresence(msg) {
 }
 
 function onMessage(msg) {
-   to = msg.getAttribute('to');
-   from = msg.getAttribute('from');
-   type = msg.getAttribute('type');
-   elems = msg.getElementsByTagName('body');
-   if (type == 'chat' && elems.length > 0) {
-      body = elems[0];
-   log('MSG: from ' + from + ': '+ Strophe.getText(body));
-       reply = $msg({to: from, from: to, type: 'chat' }).cnode(Strophe.copyElement(body));
-       connection.send(reply.tree());
-      log('SENDING: ' + from + ': ' + Strophe.getText(body));
-
-   }
-
+    from = msg.getAttribute('from');
+    to = msg.getAttribute('to');
+    from_user=to;
+    to_user=from;
+    body = elems[0];
+    append_message(from.split('@')[0],Strophe.getText(body) );
    return true;
 }
 
-function log(data) {
 
-   $('#log').append("<div></div>").append(document.createTextNode(data ));
-}
 
 $(function(){
    connection = new Strophe.Connection(BOSH_SERVICE);
@@ -72,4 +53,24 @@ $(function(){
             connection.disconnect();
         }
     });
+    $('#chat #msg').bind('keypress', function(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+     if(code == 13) { //Enter keycode
+      msg = $('#chat #msg').val();
+      reply = $msg({to: to_user, from: from_user, type: 'chat'}).c("body").t(msg);
+      connection.send(reply.tree());
+
+      append_message("me", msg );
+
+      $('#chat #msg').val("");
+     }
+       
 });
+});
+
+function append_message(from, msg) {
+    chat = "<div class='chat-entry'><div class='from'>"+from+":</div><div class='msg'>"+msg+"</div></div>";
+
+         $('#chat #history').append(chat);
+         $('#chat #history').get(0).scrollTop = $('#chat #history').get(0).scrollHeight;
+}
