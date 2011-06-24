@@ -2,17 +2,26 @@
 <html>
     <head>
         <title>NotificationJS</title>
+        <link href="style.css" type="text/css" rel="stylesheet">
     </head>
-    <body>
-        <h1>Latest content:</h1>
-        <div id="notifications"></div>
-TODO: Need to find a Bosh Service
-
-        <h2>Log</h2>
-        <div id="log" ></div>
-    </body>
+<body>
+  <div id='login' style='text-align: center'>
+    <form name='cred'>
+      <label for='jid'>JID:</label>
+      <input type='text' id='jid' value="test@localhost"/>
+      <label for='pass'>Password:</label>
+      <input type='password' id='pass' value="123456"/>
+      <input type='button' id='connect' value='connect' />
+    </form>
+  </div>
+  <hr />
+  <a href="#" class="show_hide" ref="log">Log: [show/hide]</a>
+  <div id='log'></div>
+</body>
+        
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/strophe.js"></script>
     <script type="text/javascript" src="js/notification.js"></script>
+    <script type="text/javascript" src="js/style.js"></script>
 </html
 

@@ -1,5 +1,5 @@
-var BOSH_SERVICE = 'http://mymac.local:7070/http-bind'
-var SERVICE_USER = 'admin' 
+var BOSH_SERVICE = '/http-bind/'
+var SERVICE_USER = 'victorhg' 
 var SERVICE_PWD = '123456'
 var connection = null;
 
@@ -23,9 +23,31 @@ function onConnect(status) {
 	  log('Strophe is disconnected.');
 	  $('#connect').get(0).value = 'connect';
    } else if (status == Strophe.Status.CONNECTED) {
-	  log('Strophe is connected.');
-   	  connection.disconnect();
+	  log('#### STROPHE CONNECTED ###');
+      connection.addHandler(onMessage, null, 'message', null, null, null);
+      connection.send($pres().tree());
    }
+}
+
+function onPresence(msg) {
+   log("PRESENCE: " + msg); 
+}
+
+function onMessage(msg) {
+   to = msg.getAttribute('to');
+   from = msg.getAttribute('from');
+   type = msg.getAttribute('type');
+   elems = msg.getElementsByTagName('body');
+   if (type == 'chat' && elems.length > 0) {
+      body = elems[0];
+   log('MSG: from ' + from + ': '+ Strophe.getText(body));
+       reply = $msg({to: from, from: to, type: 'chat' }).cnode(Strophe.copyElement(body));
+       connection.send(reply.tree());
+      log('SENDING: ' + from + ': ' + Strophe.getText(body));
+
+   }
+
+   return true;
 }
 
 function log(data) {
@@ -37,6 +59,17 @@ $(function(){
    connection = new Strophe.Connection(BOSH_SERVICE);
    connection.rawInput = rawInput;
    connection.rawOutput = rawOutput;
+    $('#connect').bind('click', function () {
+        var button = $('#connect').get(0);
+        if (button.value == 'connect') {
+            button.value = 'disconnect';
 
-   connection.connect(SERVICE_USER, SERVICE_PWD, onConnect);
+            connection.connect($('#jid').get(0).value,
+                       $('#pass').get(0).value,
+                       onConnect);
+        } else {
+            button.value = 'connect';
+            connection.disconnect();
+        }
+    });
 });

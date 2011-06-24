@@ -15,12 +15,12 @@ var Base64 = (function () {
             var chr1, chr2, chr3;
             var enc1, enc2, enc3, enc4;
             var i = 0;
-
+        
             do {
                 chr1 = input.charCodeAt(i++);
                 chr2 = input.charCodeAt(i++);
                 chr3 = input.charCodeAt(i++);
-
+                
                 enc1 = chr1 >> 2;
                 enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
                 enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
@@ -31,14 +31,14 @@ var Base64 = (function () {
                 } else if (isNaN(chr3)) {
                     enc4 = 64;
                 }
-
+                
                 output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) +
                     keyStr.charAt(enc3) + keyStr.charAt(enc4);
             } while (i < input.length);
-
+            
             return output;
         },
-
+        
         /**
          * Decodes a base64 string.
          * @param {String} input The string to decode.
@@ -48,22 +48,22 @@ var Base64 = (function () {
             var chr1, chr2, chr3;
             var enc1, enc2, enc3, enc4;
             var i = 0;
-
+            
             // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
             input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-
+            
             do {
                 enc1 = keyStr.indexOf(input.charAt(i++));
                 enc2 = keyStr.indexOf(input.charAt(i++));
                 enc3 = keyStr.indexOf(input.charAt(i++));
                 enc4 = keyStr.indexOf(input.charAt(i++));
-
+                
                 chr1 = (enc1 << 2) | (enc2 >> 4);
                 chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
                 chr3 = ((enc3 & 3) << 6) | enc4;
-
+                
                 output = output + String.fromCharCode(chr1);
-
+                
                 if (enc3 != 64) {
                     output = output + String.fromCharCode(chr2);
                 }
@@ -71,7 +71,7 @@ var Base64 = (function () {
                     output = output + String.fromCharCode(chr3);
                 }
             } while (i < input.length);
-
+            
             return output;
         }
     };
@@ -197,7 +197,7 @@ var MD5 = (function () {
     var md5_ii = function (a, b, c, d, x, s, t) {
         return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
     };
-
+    
     /*
      * Calculate the MD5 of an array of little-endian words, and a bit length
      */
@@ -218,7 +218,7 @@ var MD5 = (function () {
             oldb = b;
             oldc = c;
             oldd = d;
-
+            
             a = md5_ff(a, b, c, d, x[i+ 0], 7 , -680876936);
             d = md5_ff(d, a, b, c, x[i+ 1], 12, -389564586);
             c = md5_ff(c, d, a, b, x[i+ 2], 17,  606105819);
@@ -235,7 +235,7 @@ var MD5 = (function () {
             d = md5_ff(d, a, b, c, x[i+13], 12, -40341101);
             c = md5_ff(c, d, a, b, x[i+14], 17, -1502002290);
             b = md5_ff(b, c, d, a, x[i+15], 22,  1236535329);
-
+            
             a = md5_gg(a, b, c, d, x[i+ 1], 5 , -165796510);
             d = md5_gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
             c = md5_gg(c, d, a, b, x[i+11], 14,  643717713);
@@ -252,7 +252,7 @@ var MD5 = (function () {
             d = md5_gg(d, a, b, c, x[i+ 2], 9 , -51403784);
             c = md5_gg(c, d, a, b, x[i+ 7], 14,  1735328473);
             b = md5_gg(b, c, d, a, x[i+12], 20, -1926607734);
-
+            
             a = md5_hh(a, b, c, d, x[i+ 5], 4 , -378558);
             d = md5_hh(d, a, b, c, x[i+ 8], 11, -2022574463);
             c = md5_hh(c, d, a, b, x[i+11], 16,  1839030562);
@@ -269,7 +269,7 @@ var MD5 = (function () {
             d = md5_hh(d, a, b, c, x[i+12], 11, -421815835);
             c = md5_hh(c, d, a, b, x[i+15], 16,  530742520);
             b = md5_hh(b, c, d, a, x[i+ 2], 23, -995338651);
-
+            
             a = md5_ii(a, b, c, d, x[i+ 0], 6 , -198630844);
             d = md5_ii(d, a, b, c, x[i+ 7], 10,  1126891415);
             c = md5_ii(c, d, a, b, x[i+14], 15, -1416354905);
@@ -286,7 +286,7 @@ var MD5 = (function () {
             d = md5_ii(d, a, b, c, x[i+11], 10, -1120210379);
             c = md5_ii(c, d, a, b, x[i+ 2], 15,  718787259);
             b = md5_ii(b, c, d, a, x[i+ 9], 21, -343485551);
-
+            
             a = safe_add(a, olda);
             b = safe_add(b, oldb);
             c = safe_add(c, oldc);
@@ -302,14 +302,14 @@ var MD5 = (function () {
     var core_hmac_md5 = function (key, data) {
         var bkey = str2binl(key);
         if(bkey.length > 16) { bkey = core_md5(bkey, key.length * chrsz); }
-
+        
         var ipad = new Array(16), opad = new Array(16);
         for(var i = 0; i < 16; i++)
         {
             ipad[i] = bkey[i] ^ 0x36363636;
             opad[i] = bkey[i] ^ 0x5C5C5C5C;
         }
-
+        
         var hash = core_md5(ipad.concat(str2binl(data)), 512 + data.length * chrsz);
         return core_md5(opad.concat(hash), 512 + 128);
     };
@@ -354,6 +354,7 @@ var MD5 = (function () {
 
     return obj;
 })();
+
 /*
     This program is distributed under the terms of the MIT license.
     Please see the LICENSE file for details.
@@ -383,7 +384,6 @@ var MD5 = (function () {
  *  This Function object extension method creates a bound method similar
  *  to those in Python.  This means that the 'this' object will point
  *  to the instance you want.  See
- *  <a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind'>MDC's bind() documentation</a> and 
  *  <a href='http://benjamin.smedbergs.us/blog/2007-01-03/bound-functions-and-function-imports-in-javascript/'>Bound Functions and Function Imports in JavaScript</a>
  *  for a complete explanation.
  *
@@ -392,24 +392,52 @@ var MD5 = (function () {
  *
  *  Parameters:
  *    (Object) obj - The object that will become 'this' in the bound function.
- *    (Object) argN - An option argument that will be prepended to the 
- *      arguments given for the function call
  *
  *  Returns:
  *    The bound function.
  */
 if (!Function.prototype.bind) {
-    Function.prototype.bind = function (obj /*, arg1, arg2, ... */)
+    Function.prototype.bind = function (obj)
     {
         var func = this;
-        var _slice = Array.prototype.slice;
-        var _concat = Array.prototype.concat;
-        var _args = _slice.call(arguments, 1);
-        
+        return function () { return func.apply(obj, arguments); };
+    };
+}
+
+/** PrivateFunction: Function.prototype.prependArg
+ *  Prepend an argument to a function.
+ *
+ *  This Function object extension method returns a Function that will
+ *  invoke the original function with an argument prepended.  This is useful
+ *  when some object has a callback that needs to get that same object as
+ *  an argument.  The following fragment illustrates a simple case of this
+ *  > var obj = new Foo(this.someMethod);</code></blockquote>
+ *
+ *  Foo's constructor can now use func.prependArg(this) to ensure the
+ *  passed in callback function gets the instance of Foo as an argument.
+ *  Doing this without prependArg would mean not setting the callback
+ *  from the constructor.
+ *
+ *  This is used inside Strophe for passing the Strophe.Request object to
+ *  the onreadystatechange handler of XMLHttpRequests.
+ *
+ *  Parameters:
+ *    arg - The argument to pass as the first parameter to the function.
+ *
+ *  Returns:
+ *    A new Function which calls the original with the prepended argument.
+ */
+if (!Function.prototype.prependArg) {
+    Function.prototype.prependArg = function (arg)
+    {
+        var func = this;
+
         return function () {
-            return func.apply(obj ? obj : this,
-                              _concat.call(_args,
-                                           _slice.call(arguments, 0)));
+            var newargs = [arg];
+            for (var i = 0; i < arguments.length; i++) {
+                newargs.push(arguments[i]);
+            }
+            return func.apply(this, newargs);
         };
     };
 }
@@ -514,7 +542,7 @@ Strophe = {
      *  The version of the Strophe library. Unreleased builds will have
      *  a version of head-HASH where HASH is a partial revision.
      */
-    VERSION: "",
+    VERSION: "2a276a4",
 
     /** Constants: XMPP Namespace Constants
      *  Common namespace constants from the XMPP RFCs and XEPs.
@@ -551,7 +579,7 @@ Strophe = {
         STANZAS: "urn:ietf:params:xml:ns:xmpp-stanzas"
     },
 
-    /** Function: addNamespace
+    /** Function: addNamespace 
      *  This function is used to extend the current namespaces in
      *	Strophe.NS.  It takes a key and a value with the key being the
      *	name of the new namespace, with its actual value.
@@ -561,7 +589,7 @@ Strophe = {
      *  Parameters:
      *    (String) name - The name under which the namespace will be
      *      referenced under Strophe.NS
-     *    (String) value - The actual namespace.
+     *    (String) value - The actual namespace.	
      */
     addNamespace: function (name, value)
     {
@@ -698,59 +726,11 @@ Strophe = {
         var doc;
 
         if (window.ActiveXObject) {
-            doc = this._getIEXmlDom();
+            doc = new ActiveXObject("Microsoft.XMLDOM");
             doc.appendChild(doc.createElement('strophe'));
         } else {
             doc = document.implementation
                 .createDocument('jabber:client', 'strophe', null);
-        }
-
-        return doc;
-    },
-
-    /** Function: xmlGenerator
-     *  Get the DOM document to generate elements.
-     *
-     *  Returns:
-     *    The currently used DOM document.
-     */
-    xmlGenerator: function () {
-        if (!Strophe._xmlGenerator) {
-            Strophe._xmlGenerator = Strophe._makeGenerator();
-        }
-        return Strophe._xmlGenerator;
-    },
-
-    /** PrivateFunction: _getIEXmlDom
-     *  Gets IE xml doc object
-     *
-     *  Returns:
-     *    A Microsoft XML DOM Object
-     *  See Also:
-     *    http://msdn.microsoft.com/en-us/library/ms757837%28VS.85%29.aspx
-     */
-    _getIEXmlDom : function() {
-        var doc = null;
-        var docStrings = [
-            "Msxml2.DOMDocument.6.0",
-            "Msxml2.DOMDocument.5.0",
-            "Msxml2.DOMDocument.4.0",
-            "MSXML2.DOMDocument.3.0",
-            "MSXML2.DOMDocument",
-            "MSXML.DOMDocument",
-            "Microsoft.XMLDOM"
-        ];
-
-        for (var d = 0; d < docStrings.length; d++) {
-            if (doc === null) {
-                try {
-                    doc = new ActiveXObject(docStrings[d]);
-                } catch (e) {
-                    doc = null;
-                }
-            } else {
-                break;
-            }
         }
 
         return doc;
@@ -778,7 +758,11 @@ Strophe = {
     {
         if (!name) { return null; }
 
-        var node = Strophe.xmlGenerator().createElement(name);
+        var node = null;
+        if (!Strophe._xmlGenerator) {
+            Strophe._xmlGenerator = Strophe._makeGenerator();
+        }
+        node = Strophe._xmlGenerator.createElement(name);
 
         // FIXME: this should throw errors if args are the wrong type or
         // there are more than two optional args
@@ -802,7 +786,7 @@ Strophe = {
                     if (arguments[a].hasOwnProperty(k)) {
                         node.setAttribute(k, arguments[a][k]);
                     }
-                }
+                } 
             }
         }
 
@@ -818,12 +802,12 @@ Strophe = {
      *	Returns:
      *      Escaped text.
      */
-    xmlescape: function(text)
+    xmlescape: function(text) 
     {
 	text = text.replace(/\&/g, "&amp;");
         text = text.replace(/</g,  "&lt;");
         text = text.replace(/>/g,  "&gt;");
-        return text;
+        return text;    
     },
 
     /** Function: xmlTextNode
@@ -842,7 +826,10 @@ Strophe = {
 	//ensure text is escaped
 	text = Strophe.xmlescape(text);
 
-        return Strophe.xmlGenerator().createTextNode(text);
+        if (!Strophe._xmlGenerator) {
+            Strophe._xmlGenerator = Strophe._makeGenerator();
+        }
+        return Strophe._xmlGenerator.createTextNode(text);
     },
 
     /** Function: getText
@@ -1140,9 +1127,9 @@ Strophe = {
                if(elem.attributes[i].nodeName != "_realname") {
                  result += " " + elem.attributes[i].nodeName.toLowerCase() +
                 "='" + elem.attributes[i].value
-                    .replace(/&/g, "&amp;")
-                       .replace(/\'/g, "&apos;")
-                       .replace(/</g, "&lt;") + "'";
+                    .replace("&", "&amp;")
+                       .replace("'", "&apos;")
+                       .replace("<", "&lt;") + "'";
                }
         }
 
@@ -1357,10 +1344,8 @@ Strophe.Builder.prototype = {
      */
     cnode: function (elem)
     {
-        var xmlGen = Strophe.xmlGenerator();
-        var newElem = xmlGen.importNode ? xmlGen.importNode(elem, true) : Strophe.copyElement(elem);
-        this.node.appendChild(newElem);
-        this.node = newElem;
+        this.node.appendChild(elem);
+        this.node = elem;
         return this;
     },
 
@@ -1422,7 +1407,7 @@ Strophe.Handler = function (handler, ns, name, type, id, from, options)
     this.type = type;
     this.id = id;
     this.options = options || {matchbare: false};
-
+    
     // default matchBare to false if undefined
     if (!this.options.matchBare) {
         this.options.matchBare = false;
@@ -1452,7 +1437,7 @@ Strophe.Handler.prototype = {
     {
         var nsMatch;
         var from = null;
-
+        
         if (this.options.matchBare) {
             from = Strophe.getBareJidFromJid(elem.getAttribute('from'));
         } else {
@@ -1704,8 +1689,7 @@ Strophe.Request.prototype = {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
         }
 
-        // use Function.bind() to prepend ourselves as an argument
-        xhr.onreadystatechange = this.func.bind(null, this);
+        xhr.onreadystatechange = this.func.prependArg(this);
 
         return xhr;
     }
@@ -1753,8 +1737,6 @@ Strophe.Connection = function (service)
     /* The current session ID. */
     this.sid = null;
     this.streamId = null;
-    /* stream:features */
-    this.features = null;
 
     // SASL
     this.do_session = false;
@@ -1958,8 +1940,8 @@ Strophe.Connection.prototype = {
 
         this._requests.push(
             new Strophe.Request(body.tree(),
-                                this._onRequestStateChange.bind(
-                                    this, this._connect_cb.bind(this)),
+                                this._onRequestStateChange.bind(this)
+                                    .prependArg(this._connect_cb.bind(this)),
                                 body.tree().getAttribute("rid")));
         this._throttledRequestHandler();
     },
@@ -2107,10 +2089,10 @@ Strophe.Connection.prototype = {
 
     /** Function: flush
      *  Immediately send any pending outgoing data.
-     *
+     *  
      *  Normally send() queues outgoing data until the next idle period
      *  (100ms), which optimizes network use in the common cases when
-     *  several send()s are called in succession. flush() can be used to
+     *  several send()s are called in succession. flush() can be used to 
      *  immediately send all pending data.
      */
     flush: function ()
@@ -2127,9 +2109,9 @@ Strophe.Connection.prototype = {
      *  Parameters:
      *    (XMLElement) elem - The stanza to send.
      *    (Function) callback - The callback function for a successful request.
-     *    (Function) errback - The callback function for a failed or timed
+     *    (Function) errback - The callback function for a failed or timed 
      *      out request.  On timeout, the stanza will be null.
-     *    (Integer) timeout - The time specified in milliseconds for a
+     *    (Integer) timeout - The time specified in milliseconds for a 
      *      timeout to occur.
      *
      *  Returns:
@@ -2205,7 +2187,7 @@ Strophe.Connection.prototype = {
                 message: "Cannot queue non-DOMElement."
             };
         }
-
+        
         this._data.push(element);
     },
 
@@ -2288,7 +2270,7 @@ Strophe.Connection.prototype = {
      *  boolean). When matchBare is true, the from parameter and the from
      *  attribute on the stanza will be matched as bare JIDs instead of
      *  full JIDs. To use this, pass {matchBare: true} as the value of
-     *  options. The default value for matchBare is false.
+     *  options. The default value for matchBare is false. 
      *
      *  The return value should be saved if you wish to remove the handler
      *  with deleteHandler().
@@ -2479,12 +2461,6 @@ Strophe.Connection.prototype = {
             reqStatus = -1;
         }
 
-        // make sure we limit the number of retries
-        if (req.sends > 5) {
-            this._onDisconnectTimeout();
-            return;
-        }
-
         var time_elapsed = req.age();
         var primaryTimeout = (!isNaN(time_elapsed) &&
                               time_elapsed > Math.floor(Strophe.TIMEOUT * this.wait));
@@ -2584,7 +2560,7 @@ Strophe.Connection.prototype = {
 
         if (this._requests.length > 1 &&
             Math.abs(this._requests[0].rid -
-                     this._requests[1].rid) < this.window) {
+                     this._requests[1].rid) < this.window - 1) {
             this._processRequest(1);
         }
     },
@@ -2679,7 +2655,7 @@ Strophe.Connection.prototype = {
                 }
             }
 
-            if (!((reqStatus > 0 && reqStatus < 500) ||
+            if (!((reqStatus > 0 && reqStatus < 10000) ||
                   req.sends > 5)) {
                 this._throttledRequestHandler();
             }
@@ -2786,11 +2762,6 @@ Strophe.Connection.prototype = {
         var typ = elem.getAttribute("type");
         var cond, conflict;
         if (typ !== null && typ == "terminate") {
-            // Don't process stanzas that come in after disconnect
-            if (this.disconnecting) {
-                return;
-            }
-
             // an error occurred
             cond = elem.getAttribute("condition");
             conflict = elem.getElementsByTagName("conflict");
@@ -2849,8 +2820,8 @@ Strophe.Connection.prototype = {
         this.disconnecting = true;
 
         var req = new Strophe.Request(body.tree(),
-                                      this._onRequestStateChange.bind(
-                                          this, this._dataRecv.bind(this)),
+                                      this._onRequestStateChange.bind(this)
+                                          .prependArg(this._dataRecv.bind(this)),
                                       body.tree().getAttribute("rid"));
 
         this._requests.push(req);
@@ -2912,7 +2883,7 @@ Strophe.Connection.prototype = {
         if (hold) { this.hold = parseInt(hold, 10); }
         var wait = bodyWrap.getAttribute('wait');
         if (wait) { this.wait = parseInt(wait, 10); }
-
+        
 
         var do_sasl_plain = false;
         var do_sasl_digest_md5 = false;
@@ -2937,8 +2908,8 @@ Strophe.Connection.prototype = {
             var body = this._buildBody();
             this._requests.push(
                 new Strophe.Request(body.tree(),
-                                    this._onRequestStateChange.bind(
-                                        this, this._connect_cb.bind(this)),
+                                    this._onRequestStateChange.bind(this)
+                                      .prependArg(this._connect_cb.bind(this)),
                                     body.tree().getAttribute("rid")));
             this._throttledRequestHandler();
             return;
@@ -3112,7 +3083,7 @@ Strophe.Connection.prototype = {
      */
     _quote: function (str)
     {
-        return '"' + str.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+        return '"' + str.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; 
         //" end string workaround for emacs
     },
 
@@ -3222,9 +3193,6 @@ Strophe.Connection.prototype = {
      */
     _sasl_auth1_cb: function (elem)
     {
-        // save stream:features for future usage
-        this.features = elem;
-
         var i, child;
 
         for (i = 0; i < elem.childNodes.length; i++) {
@@ -3462,13 +3430,6 @@ Strophe.Connection.prototype = {
     {
         var i, thand, since, newList;
 
-        // add timed handlers scheduled for addition
-        // NOTE: we add before remove in the case a timed handler is
-        // added and then deleted before the next _onIdle() call.
-        while (this.addTimeds.length > 0) {
-            this.timedHandlers.push(this.addTimeds.pop());
-        }
-
         // remove timed handlers that have been scheduled for deletion
         while (this.removeTimeds.length > 0) {
             thand = this.removeTimeds.pop();
@@ -3476,6 +3437,11 @@ Strophe.Connection.prototype = {
             if (i >= 0) {
                 this.timedHandlers.splice(i, 1);
             }
+        }
+
+        // add timed handlers scheduled for addition
+        while (this.addTimeds.length > 0) {
+            this.timedHandlers.push(this.addTimeds.pop());
         }
 
         // call ready timed handlers
@@ -3527,8 +3493,8 @@ Strophe.Connection.prototype = {
             this._data = [];
             this._requests.push(
                 new Strophe.Request(body.tree(),
-                                    this._onRequestStateChange.bind(
-                                        this, this._dataRecv.bind(this)),
+                                    this._onRequestStateChange.bind(this)
+                                    .prependArg(this._dataRecv.bind(this)),
                                     body.tree().getAttribute("rid")));
             this._processRequest(this._requests.length - 1);
         }
@@ -3568,3 +3534,4 @@ if (callback) {
     window.$iq = arguments[3];
     window.$pres = arguments[4];
 });
+
