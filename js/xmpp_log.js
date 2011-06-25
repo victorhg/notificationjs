@@ -1,7 +1,11 @@
 
 var Log = (function () {
     var write = function(data) {
-       $('#log').append("<div></div>").append(document.createTextNode(data ));
+        var log = $('#log');
+       log.append($("<div></div>").text(data) );
+       log.get(0).scrollTop = log.get(0).scrollHeight;
+
+
     } 
     var obj = {
         rawInput: function(data) {
