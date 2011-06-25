@@ -6,17 +6,17 @@
 <link rel='stylesheet' type='text/css' href='css/groupie.css'>
 <link rel='stylesheet' type='text/css' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/cupertino/jquery-ui.css'>
 </head>
-<body> <h1>Groupie</h1>
+<body>
     <div id='toolbar'> 
         <input id='leave' type='button' value='Leave Room' />
-</div>
-<div>
-    <div>
-
-    <span id='room-name'></span>
-    <span id='room-topic'></span>
     </div>
-    <div id='chat'> </div>
+    <div>
+        <span id='room-name'></span>
+        <span id='room-topic'></span>
+    </div>
+
+<div id="holder">
+       <div id='chat'> </div>
     <textarea id='input'></textarea>
 </div>
 <div id='participants'> 
@@ -32,15 +32,13 @@
     <input type='text' id='room' value="chat@conference.localhost"><br />
     <label>Nickname:</label><input type='text' id='nickname'>
 </div>
-
- <a href="#" class="show_hide" ref="log">Log: [show/hide]</a>
-  <div id='log'></div>
+ <div class="inline" id='log'></div>
 </body>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/xmpp_log.js"></script>
     <script type="text/javascript" src="js/strophe.js"></script>
 
-<script type='text/javascript' src='js/groupie.js'></script> 
+    <script type='text/javascript' src='js/groupie.js'></script> 
 </html>
         
