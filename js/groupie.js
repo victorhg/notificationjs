@@ -29,7 +29,14 @@ var Groupie = {
             var nick_class = "nick";
             if(nick === Groupie.nickname) nick_class += " self";
             var body = $(message).children('body').text();
-            Groupie.add_message("<div class='message'>"+nick+": "+body+"</div>");
+            var delayed = $(message).children('delay').length > 0 ||
+                              $(message).children("x[xmlns='jabber:x:delay']").length > 0;
+            if(!notice) {
+                var delay_css = delayed ? "delayed":"";
+               Groupie.add_message("<div class='message "+delay_css+"'> <span class='"+nick_class+"'>"+nick+"</span> <span class='body'>"+body+"</span></div>");
+            } else {
+                Groupie.add_message("<div class='notice'>"+nick+": "+body+"</div>");
+            }
           }
           return true;
     }, 
@@ -57,13 +64,15 @@ var Groupie = {
          } else if (!Groupie.participants[nick]  &&   $(presence).attr('type') !== 'unavailable') {
             Groupie.participants[nick] = true;
             $('#participant-list').append('<li>'+nick+'</li>');
-            $('#chat').append("<div class='notice'>*** "+ nick +" has joined the room...</div>");
+            $(document).trigger('user_joined', nick);
+
          } else if(Groupie.participants[nick] && $(presence).attr("type") === 'unavailable') {
                $('#participant-list li').each(function () {
                    if (nick === $(this).text()) {
                       $(this).remove(); return false;
                    }
                });
+               Groupie.participants[nick] = false;
                $(document).trigger('user_left', nick);
             
          }
@@ -170,11 +179,14 @@ $(document).bind('room_joined', function () {
    $('#leave').removeAttr('disabled');
    $('#room-name').text(Groupie.room);
 
-   $('#chat').append("<div class='notice'>*** Room joined</div>");
+   Groupie.add_message("<div class='notice'>*** Room joined</div>");
 });
 
 $(document).bind('user_left', function(ev, name){
    Groupie.add_message("<div class='notice'>*** "+ name+" left.</div>");
 });
 
+$(document).bind('user_joined', function(ev, name){
+    Groupie.add_message("<div class='notice'>*** "+ name +" has joined the room...</div>");
+});
 
